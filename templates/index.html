@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Визуализация графа</title>
+    <link href="https://cdn.jsdelivr.net/npm/vis-network@9.0.1/dist/vis-network.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Левая часть - контейнер с графом -->
+        <div class="graph-container" id="graph-container"></div>
+
+        <!-- Правая часть - контейнер с формами -->
+        <div class="form-container">
+            <h2>Параметры графа</h2>
+            <form id="graph-form">
+                <label for="n_nodes">Кол-во вершин:</label>
+                <input type="text" id="n_nodes" name="n_nodes" required>
+                <label for="n_edges">Кол-во ребер:</label>
+                <input type="text" id="n_edges" name="n_edges" required>
+                <button type="submit">Обновить граф</button>
+            </form>
+
+            <h2>Параметры агентов</h2>
+            <form id="darwin-form">
+                <label for="agents">Количесвто агентов:</label>
+                <input type="text" id="agents" name="agents" required>
+                <label for="iters">Количество итераций:</label>
+                <input type="text" id="iters" name="iters" required>
+                <button type="submit">Дарвин</button>
+                <button type="other-submit">Другой вариант</button>
+            </form>
+
+            <!-- Область для вывода текста -->
+            <div class="result-container" id="result-container">
+                <h2>Результаты</h2>
+                <p id="result-text">Здесь будут отображаться результаты...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключаем библиотеку vis.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vis-network@9.0.1/dist/vis-network.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
