@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 
 import graph as G
 from darwin_genetic import Darwin
+from devries_genetic import Devries
 
 app = Flask(__name__)
 
@@ -20,7 +21,7 @@ def graph() -> jsonify:
         return jsonify({'error': 'Проблемы с параметрами'})
 
 @app.route('/darwin', methods=['GET'])
-def add() -> jsonify:
+def add_darwin() -> jsonify:
     global MY_GRAPH
     
     stop_count = request.args.get('iters', type=int)
@@ -32,7 +33,28 @@ def add() -> jsonify:
 
         for _ in range(my_darwin.stop_point):
             my_darwin.iteration()
-        return jsonify({'result': list(my_darwin.get_best().vertex_by_string_set())})
+        
+        res = my_darwin.get_best()
+        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score})
+    else:
+        return jsonify({'error': 'Missing parameters'})
+
+@app.route('/devries', methods=['GET'])
+def add_devries() -> jsonify:
+    global MY_GRAPH
+    
+    stop_count = request.args.get('iters', type=int)
+    agents_count = request.args.get('agents', type=int)
+    
+    if stop_count is not None and agents_count is not None:
+        my_devries = Devries(MY_GRAPH, agents_count, stop_count)
+        my_devries.take_score()
+
+        for _ in range(my_devries.stop_point):
+            my_devries.iteration()
+            
+        res = my_devries.get_best()
+        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score, 'dooms': my_devries.doom_count})
     else:
         return jsonify({'error': 'Missing parameters'})
 

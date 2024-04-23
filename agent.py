@@ -2,9 +2,15 @@ import random
 
 class Agent:
     def __init__(self, l):
-        self.vertex = [random.randint(0, 1) for _ in range(l)]
-        #self.vertex = [1] * l
+        self.vertex = self.gen(l)
         self.score = 0
+        
+    def gen(self, l):
+        while True:
+            g = [random.randint(0, 1) for _ in range(l)]
+            if 1 in g:
+                break 
+        return g
     
     def vertex_by_set(self):
         s = set()
