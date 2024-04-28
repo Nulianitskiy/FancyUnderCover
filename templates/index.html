@@ -38,11 +38,16 @@
                 <h2>Результаты</h2>
                 <p id="result-text">Здесь будут отображаться результаты...</p>
             </div>
+
+            <!-- Контейнер для отображения графика -->
+            <div id="visualization"></div>
         </div>
     </div>
 
     <!-- Подключаем библиотеку vis.js -->
     <script src="https://cdn.jsdelivr.net/npm/vis-network@9.0.1/dist/vis-network.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
+    <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 </body>
 </html>

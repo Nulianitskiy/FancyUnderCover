@@ -9,6 +9,8 @@ class Darwin:
         self.stop_point = stop_point
         self.n_nodes = graph.number_of_nodes()
         self.agents = self.generate(agent_count)
+        
+        self.res_stash = []
     
     def generate(self, n):
         agents = []
@@ -52,7 +54,7 @@ class Darwin:
 
     def fitness_function(self, agent):
         if not self.is_edge_cover(agent.vertex_by_set()):
-            return -1
+            return 0
         # if len(agent.vertex_by_set()) == 0:
         #     return -1
         return 1 - (len(agent.vertex_by_set())/self.n_nodes)
@@ -89,3 +91,6 @@ class Darwin:
         
         self.agents = new_pop
         self.take_score()
+        
+        b = self.get_best()
+        self.res_stash.append(b.score)

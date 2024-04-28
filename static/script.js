@@ -8,6 +8,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var darwinButton = document.getElementById('darwin-btn')
     var devriesButton = document.getElementById('devries-btn')
 
+    // Создание или обновление графика
+    var containerBar = document.getElementById('visualization');
+    var graph2d = null; // Ссылка на объект графика
+
+    function createOrUpdateGraph(containerBar, chart, groups, optionsChart) {
+        if (graph2d === null) {
+            // Создание нового графика
+            graph2d = new vis.Graph2d(containerBar, chart, groups, optionsChart);
+        } else {
+            // Обновление данных и опций графика
+            graph2d.setItems(chart);
+            graph2d.setOptions(optionsChart);
+            graph2d.redraw();
+        }
+    }
+
     function updateGraph(n_nodes, n_edges) {
         var url = '/graph?n_nodes=' + encodeURIComponent(n_nodes) + '&n_edges=' + encodeURIComponent(n_edges);
 
@@ -55,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const results = data.vis;
 
-                const message = `Результаты Darwin: Счет${data.score}`;
+                const message = `Результаты Дарвин: Счет${data.score}| Время: ${data.time}`;
                 const resultTextElement = document.getElementById('result-text')
                 resultTextElement.textContent = message;
     
@@ -97,9 +113,48 @@ document.addEventListener('DOMContentLoaded', function() {
     
                 // Перерисовываем сеть
                 network.redraw();
+                
+                // Рисуем столбчатый график 
+                var groups = new vis.DataSet();
+                groups.add({
+                    id: 0,
+                    content: 'main',
+                    className: 'custom-style1',
+                    options: {
+                        drawPoints: {
+                            style: 'square' // square, circle
+                        },
+                        shaded: {
+                            orientation: 'bottom' // top, bottom
+                        }
+                    }});
+
+                var chart = new vis.DataSet();
+                data.stash.forEach(function (value, index) {
+                    chart.add({ x: index, y: value, group: 0});
+                });
+
+                // Настройки для графика
+                var optionsChart = {
+                    width: '100%',
+                    height: '100%',
+                    start: 1,
+                    end: data.stash.length,
+                    drawPoints: {
+                        style: 'square' // Можно изменить стиль точек на графике
+                    },
+                    dataAxis: {
+                        left: {
+                            range: { min: 0, max: 1 }
+                        }
+                    }
+                };
+            
+                // Вызываем функцию создания или обновления графика
+                createOrUpdateGraph(containerBar, chart, groups, optionsChart);
             })
             .catch(error => {
-                console.error('Ошибка при загрузке данных Darwin:', error);
+                console.error('Ошибка при загрузке данных Дарвин:', error);
             });
     }
     
@@ -119,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 const results = data.vis;
-                const message = `Результаты De Vries: Счет: ${data.score} Катастроф: ${data.dooms}`;
+                const message = `Результаты Де Вриз: Счет: ${data.score}| Время: ${data.time}| Катастроф: ${data.dooms}`;
                 const resultTextElement = document.getElementById('result-text')
                 resultTextElement.textContent = message;
     
@@ -161,9 +216,49 @@ document.addEventListener('DOMContentLoaded', function() {
     
                 // Перерисовываем сеть
                 network.redraw();
+
+                // Рисуем столбчатый график 
+                var groups = new vis.DataSet();
+                groups.add({
+                    id: 0,
+                    content: 'main',
+                    className: 'custom-style1',
+                    options: {
+                        drawPoints: {
+                            style: 'square' // square, circle
+                        },
+                        shaded: {
+                            orientation: 'bottom' // top, bottom
+                        }
+                    }});
+
+                // Рисуем столбчатый график 
+                var chart = new vis.DataSet();
+                data.stash.forEach(function (value, index) {
+                    chart.add({ x: index, y: value });
+                });
+
+                // Настройки для графика
+                var optionsChart = {
+                    width: '100%',
+                    height: '100%',
+                    start: 1,
+                    end: data.stash.length,
+                    drawPoints: {
+                        style: 'square' // Можно изменить стиль точек на графике
+                    },
+                    dataAxis: {
+                        left: {
+                            range: { min: 0, max: 1 }
+                        }
+                    }
+                };
+            
+                // Вызываем функцию создания или обновления графика
+                createOrUpdateGraph(containerBar, chart, groups, optionsChart);
             })
             .catch(error => {
-                console.error('Ошибка при загрузке данных Devries:', error);
+                console.error('Ошибка при загрузке данных Де Вриз:', error);
             });
     }
 

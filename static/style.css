@@ -55,3 +55,10 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
+
+/* Опциональные стили для контейнера графика */
+#visualization {
+    width: 600px;
+    height: 300px;
+    border: 1px solid #cccccc;
+}

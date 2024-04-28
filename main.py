@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+import time
 
 import graph as G
 from darwin_genetic import Darwin
@@ -28,14 +29,18 @@ def add_darwin() -> jsonify:
     agents_count = request.args.get('agents', type=int)
     
     if stop_count is not None and agents_count is not None:
+        start_time = time.time()
+        
         my_darwin = Darwin(MY_GRAPH, agents_count, stop_count)
         my_darwin.take_score()
 
         for _ in range(my_darwin.stop_point):
             my_darwin.iteration()
         
+        end_time = time.time()
+        stash = list(my_darwin.res_stash)
         res = my_darwin.get_best()
-        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score})
+        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score, 'stash': stash, 'time': end_time - start_time})
     else:
         return jsonify({'error': 'Missing parameters'})
 
@@ -47,14 +52,18 @@ def add_devries() -> jsonify:
     agents_count = request.args.get('agents', type=int)
     
     if stop_count is not None and agents_count is not None:
+        start_time = time.time()
+        
         my_devries = Devries(MY_GRAPH, agents_count, stop_count)
         my_devries.take_score()
 
         for _ in range(my_devries.stop_point):
             my_devries.iteration()
-            
+        
+        end_time = time.time()
+        stash = list(my_devries.res_stash)
         res = my_devries.get_best()
-        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score, 'dooms': my_devries.doom_count})
+        return jsonify({'vis': list(res.vertex_by_string_set()), 'score': res.score, 'stash': stash, 'time': end_time - start_time, 'dooms': my_devries.doom_count})
     else:
         return jsonify({'error': 'Missing parameters'})
 
