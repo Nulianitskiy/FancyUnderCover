@@ -8,10 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var darwinButton = document.getElementById('darwin-btn')
     var devriesButton = document.getElementById('devries-btn')
 
-    // Создание или обновление графика
     var containerBar = document.getElementById('visualization');
     var graph2d = null; // Ссылка на объект графика
 
+    // Функция создания или обновления графика
     function createOrUpdateGraph(containerBar, chart, groups, optionsChart) {
         if (graph2d === null) {
             // Создание нового графика
@@ -54,6 +54,47 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+    // Функция обновления цветов вершин и рёбер графа
+    function updateGraphColors(network, results) {
+        var nodes = network.body.data.nodes;
+        var edges = network.body.data.edges;
+
+        nodes.forEach(node => {
+            if (results.includes(node.id)) {
+                node.color = { background: "#FFD6D6", border: "#FF0000" }; // Постельный оттенок красного
+            } else {
+                node.color = { background: "#97C2FC", border: "#2B7CE9" }; // Голубой
+            }
+        });
+
+        var updatedNodes = new vis.DataSet(nodes.get());
+        var updatedEdges = new vis.DataSet(edges.get());
+
+        updatedEdges.forEach(edge => {
+            var fromNode = updatedNodes.get(edge.from);
+            var toNode = updatedNodes.get(edge.to);
+
+            if (fromNode.color && fromNode.color.border === "#FF0000") {
+                edge.color = { color: "#FF0000" }; // Красный цвет для ребра
+            } else if (toNode.color && toNode.color.border === "#FF0000") {
+                edge.color = { color: "#FF0000" }; // Красный цвет для ребра
+            } else {
+                edge.color = { color: "#2B7CE9" }; // Голубой цвет для остальных ребер
+            }
+        });
+
+        var graphData = {
+            nodes: updatedNodes,
+            edges: updatedEdges
+        };
+
+        // Обновляем данные графа и перерисовываем сеть
+        network.setData(graphData);
+
+        // Перерисовываем сеть
+        network.redraw();
+    }
+
     form.addEventListener('submit', function(event) {
         event.preventDefault();
         var n_nodes = document.getElementById('n_nodes').value;
@@ -71,48 +112,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 const results = data.vis;
 
-                const message = `Результаты Дарвин: Счет${data.score}| Время: ${data.time}`;
+                const message = `Результаты Дарвин: Счет: ${data.score}| Время: ${data.time}`;
                 const resultTextElement = document.getElementById('result-text')
                 resultTextElement.textContent = message;
     
-                var nodes = network.body.data.nodes;
-                var edges = network.body.data.edges;
-    
-                // Обновление цветов вершин в зависимости от результатов
-                nodes.forEach(node => {
-                    if (results.includes(node.id)) {
-                        node.color = { background: "#FFD6D6", border: "#FF0000" }; // Постельный оттенок красного
-                    } else {
-                        node.color = { background: "#97C2FC", border: "#2B7CE9" }; // Голубой
-                    }
-                });
-    
-                var updatedNodes = new vis.DataSet(nodes.get());
-                var updatedEdges = new vis.DataSet(edges.get());
-
-                updatedEdges.forEach(edge => {
-                    var fromNode = updatedNodes.get(edge.from);
-                    var toNode = updatedNodes.get(edge.to);
-                    
-                    if (fromNode.color && fromNode.color.border === "#FF0000") {
-                        edge.color = { color: "#FF0000" }; // Красный цвет для ребра
-                    } else if (toNode.color && toNode.color.border === "#FF0000") {
-                        edge.color = { color: "#FF0000" }; // Красный цвет для ребра
-                    } else {
-                        edge.color = { color: "#2B7CE9" }; // Голубой цвет для остальных ребер
-                    }
-                });
-
-                var graphData = {
-                    nodes: updatedNodes,
-                    edges: updatedEdges
-                };
-
-                // Обновляем данные графа и перерисовываем сеть
-                network.setData(graphData);
-    
-                // Перерисовываем сеть
-                network.redraw();
+                updateGraphColors(network, results)
                 
                 // Рисуем столбчатый график 
                 var groups = new vis.DataSet();
@@ -178,44 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const resultTextElement = document.getElementById('result-text')
                 resultTextElement.textContent = message;
     
-                var nodes = network.body.data.nodes;
-                var edges = network.body.data.edges;
-    
-                // Обновление цветов вершин в зависимости от результатов
-                nodes.forEach(node => {
-                    if (results.includes(node.id)) {
-                        node.color = { background: "#FFD6D6", border: "#FF0000" }; // Постельный оттенок красного
-                    } else {
-                        node.color = { background: "#97C2FC", border: "#2B7CE9" }; // Голубой
-                    }
-                });
-    
-                var updatedNodes = new vis.DataSet(nodes.get());
-                var updatedEdges = new vis.DataSet(edges.get());
-
-                updatedEdges.forEach(edge => {
-                    var fromNode = updatedNodes.get(edge.from);
-                    var toNode = updatedNodes.get(edge.to);
-                    
-                    if (fromNode.color && fromNode.color.border === "#FF0000") {
-                        edge.color = { color: "#FF0000" }; // Красный цвет для ребра
-                    } else if (toNode.color && toNode.color.border === "#FF0000") {
-                        edge.color = { color: "#FF0000" }; // Красный цвет для ребра
-                    } else {
-                        edge.color = { color: "#2B7CE9" }; // Голубой цвет для остальных ребер
-                    }
-                });
-
-                var graphData = {
-                    nodes: updatedNodes,
-                    edges: updatedEdges
-                };
-
-                // Обновляем данные графа и перерисовываем сеть
-                network.setData(graphData);
-    
-                // Перерисовываем сеть
-                network.redraw();
+                updateGraphColors(network, results)
 
                 // Рисуем столбчатый график 
                 var groups = new vis.DataSet();

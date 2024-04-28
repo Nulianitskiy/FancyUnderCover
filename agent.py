@@ -13,18 +13,10 @@ class Agent:
         return g
     
     def vertex_by_set(self):
-        s = set()
-        for i, v in enumerate(self.vertex):
-            if v == 1:
-                s.add(i+1)
-        return s
+        return {i + 1 for i, v in enumerate(self.vertex) if v == 1}
     
     def vertex_by_string_set(self):
-        s = set()
-        for i, v in enumerate(self.vertex):
-            if v == 1:
-                s.add(str(i+1))
-        return s
+        return {str(i + 1) for i, v in enumerate(self.vertex) if v == 1}
     
     def update(self, new_agent):
         self.vertex = new_agent.vertex[:]

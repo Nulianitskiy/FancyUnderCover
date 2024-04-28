@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Визуализация графа</title>
+    <!-- Подключаем стили для визуализации графа -->
     <link href="https://cdn.jsdelivr.net/npm/vis-network@9.0.1/dist/vis-network.min.css" rel="stylesheet">
+    <!-- Подключаем пользовательские стили -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -44,9 +46,11 @@
         </div>
     </div>
 
-    <!-- Подключаем библиотеку vis.js -->
+    <!-- Подключаем библиотеку vis.js для визуализации графов -->
     <script src="https://cdn.jsdelivr.net/npm/vis-network@9.0.1/dist/vis-network.min.js"></script>
+    <!-- Подключаем пользовательский скрипт -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- Подключаем библиотеку vis-timeline для отображения графика -->
     <script type="text/javascript" src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
     <link href="https://unpkg.com/vis-timeline@latest/styles/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
 </body>
